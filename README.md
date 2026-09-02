@@ -7,9 +7,9 @@ It is deliberately the least interesting program we write, and that is the point
 machines we do not own, sometimes for clients who will want to satisfy themselves about what it does
 before they let it near their business. So it is published here to be read.
 
-No third-party dependencies, no open ports, no credentials, no privileges. Roughly four thousand
-lines of standard-library Go that can be read in an afternoon — and the four sections below on what
-it *cannot* do are the ones worth reading first.
+No third-party dependencies, no open ports, no credentials, no privileges. Around six thousand
+lines of standard-library Go, plus two thousand of tests — readable in an afternoon, and the four
+sections below on what it *cannot* do are the ones worth reading first.
 
 ## What it does
 

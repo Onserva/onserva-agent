@@ -1,0 +1,54 @@
+[Unit]
+Description=Carry out an authorised Onserva action
+Documentation=https://onserva.com
+# Deliberately no network dependency of any kind. This unit must never wait for,
+# or care about, the internet.
+
+[Service]
+Type=oneshot
+
+# Runs as root. That is the entire reason this unit exists as a separate thing:
+# the reporting agent stays unprivileged and this one holds the privilege, so
+# the process that talks to the platform never gains the ability to change the
+# machine.
+ExecStart=/usr/local/bin/onserva-agent --execute-fixes
+
+# ── The trade, made explicit ────────────────────────────────────────────────
+# This process can restart services. In exchange it is deaf: PrivateNetwork
+# gives it a namespace with nothing but loopback, so it cannot reach the
+# platform, cannot be reached, and cannot exfiltrate anything if it were ever
+# subverted. It talks to systemd and Docker over unix sockets, which are
+# filesystem objects and unaffected.
+PrivateNetwork=true
+RestrictAddressFamilies=AF_UNIX
+
+# It reads a request and writes a result. Nothing else on the disk changes.
+ProtectSystem=strict
+ReadWritePaths=/run/onserva
+
+# One setting survives a reboot: which access log the owner authorised us to
+# read. systemd creates and owns /var/lib/onserva for this unit, so the file
+# lands somewhere persistent WITHOUT widening ProtectSystem over /etc — which
+# is where the agent's key lives and where the privileged half has no business
+# writing. The unprivileged reporting agent only reads it.
+StateDirectory=onserva
+ProtectHome=true
+PrivateTmp=true
+
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectClock=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallArchitectures=native
+UMask=0077
+
+# A restart is bounded work. If it has not finished by now something is wrong,
+# and holding root open indefinitely is not the answer.
+TimeoutStartSec=120
+
+# No Restart= on purpose: this is a oneshot woken by onserva-fix.path. A failed
+# action must not retry itself — the owner authorised one restart, not a loop.

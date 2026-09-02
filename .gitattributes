@@ -1,0 +1,8 @@
+# This repository stores LF for everything. build.sh, test-integration.sh and
+# the systemd units are run on Linux, where a CRLF line ending fails as the
+# baffling "bad interpreter: ^M" - an error no contributor should be able to
+# cause just by cloning on Windows.
+* text=auto eol=lf
+*.go   text eol=lf
+*.sh   text eol=lf
+*.md   text eol=lf

@@ -1,0 +1,13 @@
+# Build output. Binaries are published as releases and to the installer's
+# download host, never committed - a source repository people are asked to
+# audit should contain only things they can read.
+dist/
+
+# Go
+*.exe
+*.test
+*.out
+vendor/
+
+.vercel
+.DS_Store

@@ -1,0 +1,7 @@
+The Onserva agent
+Copyright 2026 No Fear Tech Ltd
+
+This product includes software developed at No Fear Tech Ltd (https://onserva.com).
+
+The agent has no third-party dependencies: every line is either the Go standard
+library or original work in this repository.

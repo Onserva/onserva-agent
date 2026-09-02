@@ -1,0 +1,17 @@
+[Unit]
+Description=Watch for authorised Onserva actions
+Documentation=https://onserva.com
+
+[Path]
+# The handoff between the agent's two halves. The unprivileged agent drops a
+# file here; systemd — not the agent — decides to start the privileged unit.
+#
+# This is why the split works: the reporting process cannot start a root
+# service, cannot signal one, and holds no credential that would let it. All it
+# can do is write a file into a directory it has been given, and let the init
+# system notice.
+PathExistsGlob=/run/onserva/requests/*.json
+Unit=onserva-fix.service
+
+[Install]
+WantedBy=multi-user.target
